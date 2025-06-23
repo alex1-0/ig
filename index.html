@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impostor Game - Dark Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animated {
+            background: linear-gradient(135deg, #000 0%, #0f0f23 25%, #1a1a2e 50%, #16213e 75%, #000 100%);
+            position: relative;
+            min-height: 100vh;
+        }
+
+        .bg-animated::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.15), transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 107, 107, 0.1), transparent 50%),
+                        radial-gradient(circle at 40% 40%, rgba(78, 205, 196, 0.1), transparent 50%);
+            z-index: 1;
+        }
+
+        .bg-animated::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.02) 50%, transparent 70%);
+            animation: shimmer 4s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .title-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .title-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #ff9ff3 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 20px 40px rgba(255, 107, 107, 0.3),
+                        0 0 0 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .title-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 0%, #e2e8f0 25%, #94a3b8 50%, #64748b 75%, #475569 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: rgba(15, 15, 35, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.4),
+                        0 0 0 1px rgba(255, 255, 255, 0.05),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            letter-spacing: 0.025em;
+        }
+
+        .section-icon {
+            font-size: 24px;
+            filter: drop-shadow(0 0 8px rgba(255, 107, 107, 0.3));
+        }
+
+        /* Inputs */
+        .input {
+            width: 100%;
+            padding: 16px 20px;
+            margin: 8px 0;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: rgba(255, 107, 107, 0.5);
+            box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1),
+                        inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Buttons */
+        .button {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #ff9ff3 100%);
+            color: #fff;
+            border: none;
+            padding: 18px 32px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            margin: 12px 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3),
+                        0 0 0 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.025em;
+        }
+
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .button:hover::before {
+            left: 100%;
+        }
+
+        .button:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #e879f9 100%);
+            box-shadow: 0 12px 48px rgba(255, 107, 107, 0.4),
+                        0 0 0 1px rgba(255, 255, 255, 0.2);
+        }
+
+        .button-secondary {
+            background: linear-gradient(135deg, #374151 0%, #1f2937 50%, #111827 100%);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                        0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .button-secondary:hover {
+            background: linear-gradient(135deg, #4b5563 0%, #374151 50%, #1f2937 100%);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4),
+                        0 0 0 1px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Player Row */
+        .player-row {
+            display: flex;
+            gap: 10px;
+            margin: 8px 0;
+            align-items: center;
+        }
+
+        .remove-btn {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            flex-shrink: 0;
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+        }
+
+        .remove-btn:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            box-shadow: 0 6px 24px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Slider */
+        .slider {
+            width: 100%;
+            height: 10px;
+            margin: 24px 0;
+            -webkit-appearance: none;
+            background: rgba(55, 65, 81, 0.6);
+            border-radius: 5px;
+            outline: none;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(255, 107, 107, 0.4),
+                        0 0 0 2px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            box-shadow: 0 6px 24px rgba(255, 107, 107, 0.6),
+                        0 0 0 4px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 64px;
+            height: 36px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider-switch {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(55, 65, 81, 0.6);
+            transition: .4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 36px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .slider-switch:before {
+            position: absolute;
+            content: "";
+            height: 28px;
+            width: 28px;
+            left: 4px;
+            bottom: 4px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            transition: .4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        input:checked + .slider-switch {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            box-shadow: 0 0 16px rgba(255, 107, 107, 0.3);
+        }
+
+        input:checked + .slider-switch:before {
+            transform: translateX(28px);
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        }
+
+        /* Settings Row */
+        .settings-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 24px 0;
+            padding: 0;
+            background: none;
+            border-radius: 0;
+            border: none;
+        }
+
+        .settings-label {
+            font-weight: 600;
+            color: #e2e8f0;
+            letter-spacing: 0.025em;
+        }
+
+        .impostor-count {
+            color: #ff6b6b;
+            font-weight: 900;
+            text-shadow: 0 0 8px rgba(255, 107, 107, 0.3);
+        }
+
+        /* REVEAL PHASE */
+        .reveal-container {
+            max-width: 400px;
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .reveal-header {
+            text-align: center;
+            padding: 32px 0;
+        }
+
+        .reveal-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 12px;
+            letter-spacing: -0.025em;
+        }
+
+        .current-card-num {
+            color: #ff6b6b;
+            text-shadow: 0 0 12px rgba(255, 107, 107, 0.4);
+        }
+
+        .reveal-subtitle {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.025em;
+        }
+
+        .reveal-area {
+            flex: 1;
+            position: relative;
+            max-width: 384px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Hidden Word Card */
+        .hidden-word-container {
+            position: absolute;
+            top: 80px;
+            left: 0;
+            right: 0;
+            height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hidden-word-card {
+            background: linear-gradient(135deg, rgba(15, 15, 35, 0.95) 0%, rgba(0, 0, 0, 0.95) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.5),
+                        0 0 0 1px rgba(255, 255, 255, 0.05),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .word-display {
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 24px;
+            letter-spacing: -0.025em;
+            text-shadow: 0 0 20px currentColor;
+        }
+
+        .impostor-text {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #ff9ff3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .normal-text {
+            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #06d6a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hint-text {
+            color: #fca5a5;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-align: center;
+            text-shadow: 0 0 8px rgba(252, 165, 165, 0.3);
+        }
+
+        /* Draggable Card */
+        .draggable-card {
+            position: absolute;
+            top: 80px;
+            left: 0;
+            right: 0;
+            height: 320px;
+            background: linear-gradient(135deg, #374151 0%, #1f2937 25%, #111827 50%, #000 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            cursor: grab;
+            user-select: none;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6),
+                        0 0 0 1px rgba(255, 255, 255, 0.05),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .draggable-card:active {
+            cursor: grabbing;
+        }
+
+        .card-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .player-name {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 16px;
+            letter-spacing: -0.025em;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .card-subtitle {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        .drag-indicators {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .drag-line {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #4b5563 0%, #6b7280 50%, #4b5563 100%);
+            border-radius: 2px;
+            box-shadow: 0 0 8px rgba(75, 85, 99, 0.3);
+        }
+
+        .drag-arrow {
+            font-size: 3rem;
+            color: #94a3b8;
+            animation: bounce 2s infinite;
+            filter: drop-shadow(0 0 8px rgba(148, 163, 184, 0.3));
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(-25%); }
+            50% { transform: translateY(0); }
+        }
+
+        .drag-text {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.025em;
+        }
+
+        .progress-container {
+            margin-top: 48px;
+            width: 100%;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(55, 65, 81, 0.6);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b 0%, #ee5a24 50%, #ff9ff3 100%);
+            width: 0%;
+            transition: width 0.1s ease-out;
+            box-shadow: 0 0 16px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Controls */
+        .reveal-controls {
+            text-align: center;
+            margin-top: 40px;
+            padding-bottom: 40px;
+        }
+
+        /* Playing Phase */
+        .rules-card {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 32px;
+            border-radius: 20px;
+            margin: 24px 0;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .rules-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .rule-item {
+            margin: 20px 0;
+            padding-left: 24px;
+            position: relative;
+            color: #e2e8f0;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .rule-item:before {
+            content: "•";
+            color: #ff6b6b;
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+            text-shadow: 0 0 8px rgba(255, 107, 107, 0.3);
+        }
+
+        .game-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin: 32px 0;
+        }
+
+        .info-card {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .info-title {
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .player-list-item {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .player-dot {
+            width: 6px;
+            height: 6px;
+            background: #6b7280;
+            border-radius: 50%;
+            box-shadow: 0 0 4px rgba(107, 114, 128, 0.3);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container { padding: 16px; }
+            .reveal-container { padding: 16px; }
+            .glass-card { padding: 24px; }
+            .word-display { font-size: 2.5rem; }
+            .player-name { font-size: 2rem; }
+            .game-info { grid-template-columns: 1fr; }
+            .title { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animated">
+        <!-- Setup Phase -->
+        <div id="setup-phase">
+            <div class="container">
+                <div class="header">
+                    <div class="title-container">
+                        <div class="title-icon">👁️</div>
+                        <div class="title">IMPOSTOR</div>
+                    </div>
+                </div>
+                
+                <div class="glass-card">
+                    <div class="section-header">
+                        <span class="section-icon">👥</span>
+                        <span>Spieler</span>
+                    </div>
+                    <div id="players-container">
+                        <!-- Players will be added here -->
+                    </div>
+                    <button class="button button-secondary" onclick="addPlayer()">➕ Spieler hinzufügen</button>
+                    
+                    <div class="section-header" style="margin-top: 40px;">
+                        <span class="section-icon">⚙️</span>
+                        <span>Einstellungen</span>
+                    </div>
+                    
+                    <div class="settings-row">
+                        <span class="settings-label">Anzahl Impostors: <span id="impostor-count" class="impostor-count">1</span></span>
+                    </div>
+                    <input type="range" id="impostor-slider" min="1" max="1" value="1" class="slider" oninput="updateImpostorCount()">
+                    
+                    <div class="settings-row">
+                        <span class="settings-label">Impostor bekommt Hinweis</span>
+                        <label class="switch">
+                            <input type="checkbox" id="hint-checkbox" checked onchange="updateHintSetting()">
+                            <span class="slider-switch"></span>
+                        </label>
+                    </div>
+                    
+                    <button class="button" onclick="startGame()">🚀 SPIEL STARTEN</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Reveal Phase -->
+        <div id="reveal-phase" class="hidden">
+            <div class="reveal-container">
+                <div class="reveal-header">
+                    <h2 class="reveal-title">
+                        Karte <span id="current-player-num" class="current-card-num">1</span> von <span id="total-players">1</span>
+                    </h2>
+                    <p class="reveal-subtitle">
+                        Ziehe die Karte nach oben um das Wort zu sehen
+                    </p>
+                </div>
+                
+                <div class="reveal-area">
+                    <!-- Das versteckte Wort (liegt unter der Karte) -->
+                    <div class="hidden-word-container">
+                        <div class="hidden-word-card" id="hidden-word-card">
+                            <div style="text-align: center;">
+                                <div class="word-display" id="word-display">WORT</div>
+                                <div class="hint-text" id="hint-text"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Die ziehbare Karte (liegt über dem Wort) -->
+                    <div class="draggable-card" id="draggable-card">
+                        <div class="card-content">
+                            <div style="margin-bottom: 40px;">
+                                <div class="player-name" id="current-player-name">Spieler</div>
+                                <div class="card-subtitle">Deine Karte</div>
+                            </div>
+                            
+                            <div class="drag-indicators">
+                                <div class="drag-line"></div>
+                                <div class="drag-arrow">⬆️</div>
+                                <div class="drag-text">Ziehe nach oben</div>
+                            </div>
+                            
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progress-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="reveal-controls">
+                    <button class="button button-secondary" onclick="nextPlayer()" id="next-button">
+                        Nächster Spieler
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Playing Phase -->
+        <div id="playing-phase" class="hidden">
+            <div class="container">
+                <div class="header">
+                    <div class="title">🎮 SPIEL LÄUFT!</div>
+                </div>
+                
+                <div class="glass-card">
+                    <div class="rules-card">
+                        <h3 class="rules-title">
+                            <span>👁️</span>
+                            <span>Spielregeln</span>
+                        </h3>
+                        <div class="rule-item">Jeder sagt reihum ein Wort, das zum geheimen Wort passt</div>
+                        <div class="rule-item" id="impostor-rule">Die Impostors kennen das Wort nicht</div>
+                        <div class="rule-item">Impostors versuchen unentdeckt zu bleiben</div>
+                        <div class="rule-item">Nach jeder Runde könnt ihr abstimmen wer der Impostor ist</div>
+                    </div>
+                    
+                    <div class="game-info">
+                        <div class="info-card">
+                            <h4 class="info-title">
+                                <span>👥</span>
+                                <span>Spieler</span>
+                            </h4>
+                            <div id="final-player-list"></div>
+                        </div>
+                        <div class="info-card">
+                            <h4 class="info-title">
+                                <span>⚙️</span>
+                                <span>Info</span>
+                            </h4>
+                            <div id="game-settings-info"></div>
+                        </div>
+                    </div>
+                    
+                    <button class="button" onclick="resetGame()">🔄 NEUES SPIEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let gameData = {
+            players: [''],
+            impostorCount: 1,
+            giveHint: true,
+            currentPlayerIndex: 0,
+            gameWord: '',
+            impostors: [],
+            playerWords: []
+        };
+
+        // Words
+        const WORDS = ['Pizza', 'Strand', 'Kino', 'Schule', 'Auto', 'Handy', 'Musik', 'Sport', 'Buch', 'Kaffee'];
+        const SIMILAR_WORDS = {
+            'Pizza': ['Pasta', 'Burger', 'Döner'],
+            'Strand': ['Meer', 'Pool', 'See'],
+            'Kino': ['Theater', 'Konzert', 'Show'],
+            'Schule': ['Uni', 'Büro', 'Bibliothek'],
+            'Auto': ['Bus', 'Zug', 'Fahrrad'],
+            'Handy': ['Tablet', 'Laptop', 'Computer'],
+            'Musik': ['Radio', 'Konzert', 'Lied'],
+            'Sport': ['Fitness', 'Gym', 'Training'],
+            'Buch': ['Zeitung', 'Magazin', 'Roman'],
+            'Kaffee': ['Tee', 'Kakao', 'Saft']
+        };
+
+        // Drag state
+        let dragData = {
+            isDragging: false,
+            startY: 0,
+            currentOffset: 0,
+            maxOffset: 250
+        };
+
+        // Initialize
+        window.onload = function() {
+            loadSettings();
+            renderPlayers();
+            setupDragEvents();
+        };
+
+        function loadSettings() {
+            const saved = localStorage.getItem('impostor-game');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    gameData.players = data.players || [''];
+                    gameData.impostorCount = data.impostorCount || 1;
+                    gameData.giveHint = data.giveHint !== false;
+                } catch (e) {
+                    console.log('Error loading settings');
+                }
+            }
+            
+            document.getElementById('hint-checkbox').checked = gameData.giveHint;
+            updateImpostorSlider();
+        }
+
+        function saveSettings() {
+            localStorage.setItem('impostor-game', JSON.stringify({
+                players: gameData.players,
+                impostorCount: gameData.impostorCount,
+                giveHint: gameData.giveHint
+            }));
+        }
+
+        function renderPlayers() {
+            const container = document.getElementById('players-container');
+            container.innerHTML = '';
+            
+            gameData.players.forEach((player, index) => {
+                const row = document.createElement('div');
+                row.className = 'player-row';
+                
+                const input = document.createElement('input');
+                input.className = 'input';
+                input.type = 'text';
+                input.value = player;
+                input.placeholder = `Spieler ${index + 1}`;
+                input.oninput = function() {
+                    gameData.players[index] = this.value;
+                    updateImpostorSlider();
+                    saveSettings();
+                };
+                
+                row.appendChild(input);
+                
+                if (gameData.players.length > 1) {
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'remove-btn';
+                    removeBtn.innerHTML = '🗑️';
+                    removeBtn.onclick = function() {
+                        gameData.players.splice(index, 1);
+                        renderPlayers();
+                        updateImpostorSlider();
+                        saveSettings();
+                    };
+                    row.appendChild(removeBtn);
+                }
+                
+                container.appendChild(row);
+            });
+        }
+
+        function addPlayer() {
+            gameData.players.push('');
+            renderPlayers();
+            updateImpostorSlider();
+        }
+
+        function updateImpostorSlider() {
+            const validPlayers = gameData.players.filter(p => p.trim()).length;
+            const maxImpostors = Math.max(1, validPlayers - 1);
+            
+            const slider = document.getElementById('impostor-slider');
+            slider.max = maxImpostors;
+            
+            if (gameData.impostorCount > maxImpostors) {
+                gameData.impostorCount = maxImpostors;
+                slider.value = gameData.impostorCount;
+            }
+            
+            document.getElementById('impostor-count').textContent = gameData.impostorCount;
+        }
+
+        function updateImpostorCount() {
+            gameData.impostorCount = parseInt(document.getElementById('impostor-slider').value);
+            document.getElementById('impostor-count').textContent = gameData.impostorCount;
+            saveSettings();
+        }
+
+        function updateHintSetting() {
+            gameData.giveHint = document.getElementById('hint-checkbox').checked;
+            saveSettings();
+        }
+
+        function startGame() {
+            const validPlayers = gameData.players.filter(p => p.trim());
+            
+            if (validPlayers.length < 3) {
+                alert('Mindestens 3 Spieler benötigt!');
+                return;
+            }
+
+            gameData.players = validPlayers;
+            gameData.gameWord = WORDS[Math.floor(Math.random() * WORDS.length)];
+            
+            // Select impostors
+            const indices = Array.from({length: validPlayers.length}, (_, i) => i);
+            gameData.impostors = indices.sort(() => Math.random() - 0.5).slice(0, gameData.impostorCount);
+            
+            // Generate words
+            gameData.playerWords = validPlayers.map((_, index) => {
+                const isImpostor = gameData.impostors.includes(index);
+                if (isImpostor) {
+                    if (gameData.giveHint && SIMILAR_WORDS[gameData.gameWord]) {
+                        const hints = SIMILAR_WORDS[gameData.gameWord];
+                        return hints[Math.floor(Math.random() * hints.length)];
+                    }
+                    return 'IMPOSTOR';
+                }
+                return gameData.gameWord;
+            });
+
+            gameData.currentPlayerIndex = 0;
+            showRevealPhase();
+        }
+
+        function showRevealPhase() {
+            document.getElementById('setup-phase').classList.add('hidden');
+            document.getElementById('reveal-phase').classList.remove('hidden');
+            document.getElementById('playing-phase').classList.add('hidden');
+            
+            updateRevealDisplay();
+        }
+
+        function updateRevealDisplay() {
+            const currentPlayer = gameData.players[gameData.currentPlayerIndex];
+            const currentWord = gameData.playerWords[gameData.currentPlayerIndex];
+            const isImpostor = gameData.impostors.includes(gameData.currentPlayerIndex);
+            
+            document.getElementById('current-player-num').textContent = gameData.currentPlayerIndex + 1;
+            document.getElementById('total-players').textContent = gameData.players.length;
+            document.getElementById('current-player-name').textContent = currentPlayer;
+            
+            const wordDisplay = document.getElementById('word-display');
+            const hintText = document.getElementById('hint-text');
+            
+            if (isImpostor) {
+                wordDisplay.className = 'word-display impostor-text';
+                wordDisplay.textContent = currentWord;
+                hintText.textContent = currentWord === 'IMPOSTOR' ? 'Du bist der Impostor!' : 'Du bist der Impostor! Hinweis oben ↑';
+            } else {
+                wordDisplay.className = 'word-display normal-text';
+                wordDisplay.textContent = currentWord;
+                hintText.textContent = '';
+            }
+            
+            const nextBtn = document.getElementById('next-button');
+            if (gameData.currentPlayerIndex < gameData.players.length - 1) {
+                nextBtn.textContent = `Nächster: ${gameData.players[gameData.currentPlayerIndex + 1]}`;
+            } else {
+                nextBtn.textContent = 'Spiel starten!';
+            }
+            
+            resetCardPosition();
+        }
+
+        function nextPlayer() {
+            if (gameData.currentPlayerIndex < gameData.players.length - 1) {
+                gameData.currentPlayerIndex++;
+                updateRevealDisplay();
+            } else {
+                showPlayingPhase();
+            }
+        }
+
+        function showPlayingPhase() {
+            document.getElementById('setup-phase').classList.add('hidden');
+            document.getElementById('reveal-phase').classList.add('hidden');
+            document.getElementById('playing-phase').classList.remove('hidden');
+            
+            // Update info
+            document.getElementById('impostor-rule').textContent = 
+                `Die ${gameData.impostorCount} Impostor${gameData.impostorCount > 1 ? 's' : ''} kennen das Wort nicht`;
+            
+            const playerList = document.getElementById('final-player-list');
+            playerList.innerHTML = gameData.players.map(p => 
+                `<div class="player-list-item"><div class="player-dot"></div>${p}</div>`
+            ).join('');
+            
+            const settingsInfo = document.getElementById('game-settings-info');
+            settingsInfo.innerHTML = `
+                <div style="color: #94a3b8; font-size: 0.875rem; margin: 8px 0;">
+                    <span style="color: #ff6b6b; font-weight: 700;">${gameData.impostorCount}</span> Impostor${gameData.impostorCount > 1 ? 's' : ''} im Spiel
+                </div>
+                <div style="color: #94a3b8; font-size: 0.875rem; margin: 8px 0;">
+                    Hinweise: <span style="color: #10b981; font-weight: 700;">${gameData.giveHint ? 'An' : 'Aus'}</span>
+                </div>
+            `;
+        }
+
+        function resetGame() {
+            document.getElementById('setup-phase').classList.remove('hidden');
+            document.getElementById('reveal-phase').classList.add('hidden');
+            document.getElementById('playing-phase').classList.add('hidden');
+            
+            gameData.currentPlayerIndex = 0;
+            gameData.playerWords = [];
+        }
+
+        // Drag functionality
+        function setupDragEvents() {
+            const card = document.getElementById('draggable-card');
+            
+            // Touch events
+            card.addEventListener('touchstart', handleStart, {passive: false});
+            card.addEventListener('touchmove', handleMove, {passive: false});
+            card.addEventListener('touchend', handleEnd);
+            
+            // Mouse events
+            card.addEventListener('mousedown', handleStart);
+            document.addEventListener('mousemove', handleMove);
+            document.addEventListener('mouseup', handleEnd);
+        }
+
+        function handleStart(e) {
+            e.preventDefault();
+            dragData.isDragging = true;
+            dragData.startY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+        }
+
+        function handleMove(e) {
+            if (!dragData.isDragging) return;
+            e.preventDefault();
+            
+            const currentY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+            const deltaY = dragData.startY - currentY;
+            const newOffset = Math.max(0, Math.min(dragData.maxOffset, deltaY));
+            
+            updateCardPosition(newOffset);
+        }
+
+        function handleEnd(e) {
+            if (!dragData.isDragging) return;
+            e.preventDefault();
+            
+            dragData.isDragging = false;
+            setTimeout(() => resetCardPosition(), 100);
+        }
+
+        function updateCardPosition(offset) {
+            const card = document.getElementById('draggable-card');
+            const hiddenWordCard = document.getElementById('hidden-word-card');
+            const progressFill = document.getElementById('progress-fill');
+            
+            // Move card up
+            card.style.transform = `translateY(-${offset}px)`;
+            card.style.transition = dragData.isDragging ? 'none' : 'transform 0.3s ease-out';
+            
+            // Reveal word by clipping the hidden card
+            const clipValue = Math.max(0, dragData.maxOffset - offset);
+            hiddenWordCard.style.clipPath = `inset(${clipValue}px 0 0 0)`;
+            hiddenWordCard.style.transition = dragData.isDragging ? 'none' : 'clip-path 0.3s ease-out';
+            
+            // Update progress bar
+            const progress = (offset / dragData.maxOffset) * 100;
+            progressFill.style.width = `${progress}%`;
+            progressFill.style.transition = dragData.isDragging ? 'none' : 'width 0.1s ease-out';
+        }
+
+        function resetCardPosition() {
+            updateCardPosition(0);
+        }
+    </script>
+</body>
+</html>
