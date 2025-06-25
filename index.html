@@ -767,7 +767,6 @@
                                 <div class="drag-line"></div>
                                 <div class="drag-arrow">⬆️</div>
                                 <div class="drag-text">Ziehe nach oben</div>
-                                <div class="placeholder"></div>
                             </div>
                             
                             <div class="progress-container">
@@ -842,188 +841,19 @@
         };
 
         // Words
-const WORDS = [
-    'Pizza', 'Strand', 'Kino', 'Schule', 'Auto', 'Handy', 'Musik', 'Sport', 'Buch', 'Kaffee',
-    'Hund', 'Katze', 'Haus', 'Baum', 'Winter', 'Sommer', 'Berg', 'Stadt', 'Spiel', 'Zug',
-    'Wasser', 'Feuer', 'Licht', 'Sonne', 'Mond', 'Computer', 'Film', 'Reise', 'Party', 'Lernen',
-    'Arbeit', 'Essen', 'Trinken', 'Garten', 'Blume', 'Lied', 'Lachen', 'Weinen', 'Tanzen', 'Regen',
-    'Wald', 'Fahrrad', 'Bahn', 'Telefon', 'Fenster', 'Stuhl', 'Tisch', 'Uhr', 'Jacke', 'Brille'
-];
-
-const SIMILAR_WORDS = {
-    'Pizza': ['Pasta', 'Burger', 'Döner'],
-    'Strand': ['Meer', 'Pool', 'See'],
-    'Kino': ['Theater', 'Konzert', 'Show'],
-    'Schule': ['Uni', 'Büro', 'Bibliothek'],
-    'Auto': ['Bus', 'Zug', 'Fahrrad'],
-    'Handy': ['Tablet', 'Laptop', 'Computer'],
-    'Musik': ['Radio', 'Konzert', 'Lied'],
-    'Sport': ['Fitness', 'Gym', 'Training'],
-    'Buch': ['Zeitung', 'Magazin', 'Roman'],
-    'Kaffee': ['Tee', 'Kakao', 'Saft'],
-    'Hund': ['Welpe', 'Husky', 'Retriever'],
-    'Katze': ['Kätzchen', 'Tiger', 'Leopard'],
-    'Haus': ['Wohnung', 'Villa', 'Bungalow'],
-    'Baum': ['Pflanze', 'Strauch', 'Wald'],
-    'Winter': ['Schnee', 'Kälte', 'Weihnachten'],
-    'Sommer': ['Sonne', 'Hitze', 'Ferien'],
-    'Berg': ['Gipfel', 'Alpen', 'Wanderung'],
-    'Stadt': ['Dorf', 'Metropole', 'Vorort'],
-    'Spiel': ['Game', 'Brettspiel', 'Quiz'],
-    'Zug': ['Bahn', 'S-Bahn', 'U-Bahn'],
-    'Wasser': ['Fluss', 'See', 'Ozean'],
-    'Feuer': ['Flamme', 'Lagerfeuer', 'Glut'],
-    'Licht': ['Lampe', 'Kerze', 'Schein'],
-    'Sonne': ['Sonnenstrahl', 'Hitze', 'Tag'],
-    'Mond': ['Nacht', 'Stern', 'Dunkelheit'],
-    'Computer': ['PC', 'Laptop', 'Server'],
-    'Film': ['Serie', 'Doku', 'Kurzfilm'],
-    'Reise': ['Urlaub', 'Trip', 'Tour'],
-    'Party': ['Feier', 'Event', 'Geburtstag'],
-    'Lernen': ['Studieren', 'Üben', 'Lesen'],
-    'Arbeit': ['Job', 'Beruf', 'Karriere'],
-    'Essen': ['Mahlzeit', 'Snack', 'Gericht'],
-    'Trinken': ['Saft', 'Cola', 'Wasser'],
-    'Garten': ['Hof', 'Wiese', 'Beet'],
-    'Blume': ['Rose', 'Tulpe', 'Gänseblümchen'],
-    'Lied': ['Song', 'Melodie', 'Track'],
-    'Lachen': ['Grinsen', 'Kichern', 'Freude'],
-    'Weinen': ['Tränen', 'Trauer', 'Kummer'],
-    'Tanzen': ['Bewegen', 'Musik', 'Rhythmus'],
-    'Regen': ['Tropfen', 'Wolke', 'Nässe'],
-    'Wald': ['Bäume', 'Forst', 'Natur'],
-    'Fahrrad': ['Mountainbike', 'E-Bike', 'Rennrad'],
-    'Bahn': ['Zug', 'Tram', 'S-Bahn'],
-    'Telefon': ['Handy', 'Festnetz', 'Anruf'],
-    'Fenster': ['Glas', 'Ausblick', 'Rahmen'],
-    'Stuhl': ['Hocker', 'Sessel', 'Bank'],
-    'Tisch': ['Schreibtisch', 'Esstisch', 'Beistelltisch'],
-    'Uhr': ['Wecker', 'Armbanduhr', 'Stoppuhr'],
-    'Jacke': ['Mantel', 'Pullover', 'Hoodie'],
-    'Brille': ['Sonnenbrille', 'Lesebrille', 'Sehhilfe']
-};
-        
-const WORDS = [
-    'Pizza', 'Strand', 'Kino', 'Schule', 'Auto', 'Handy', 'Musik', 'Sport', 'Buch', 'Kaffee',
-    'Hund', 'Katze', 'Haus', 'Baum', 'Winter', 'Sommer', 'Berg', 'Stadt', 'Spiel', 'Zug',
-    'Wasser', 'Feuer', 'Licht', 'Sonne', 'Mond', 'Computer', 'Film', 'Reise', 'Party', 'Lernen',
-    'Arbeit', 'Essen', 'Trinken', 'Garten', 'Blume', 'Lied', 'Lachen', 'Weinen', 'Tanzen', 'Regen',
-    'Wald', 'Fahrrad', 'Bahn', 'Telefon', 'Fenster', 'Stuhl', 'Tisch', 'Uhr', 'Jacke', 'Brille',
-    'Abenteuer', 'leuchten', 'kreativ', 'Wissenschaft', 'fliegen',
-    'Programmierer', 'nachdenklich', 'Entscheidung', 'hacken', 'glücklich',
-    'Vertrauen', 'bauen', 'schnell', 'explodieren', 'Chaos',
-    'Roboter', 'träumen', 'fokussiert', 'Philosophie', 'reisen',
-    'malen', 'scharfsinnig', 'Zukunft', 'lernen', 'intelligent',
-    'Gedanken', 'analysieren', 'einsam', 'Mut', 'schweben',
-    'Innovation', 'tiefgründig', 'programmieren', 'Natur', 'rennen',
-    'erfinden', 'logisch', 'Magie', 'heilen', 'mutig',
-    'Kreativität', 'entwickeln', 'abstrakt', 'entdecken', 'universell',
-    'Kommunikation', 'fühlen', 'neugierig', 'verstehen', 'Zeitreise'
-];
-
-const SIMILAR_WORDS = {
-    'Pizza': ['Pasta', 'Burger', 'Döner'],
-    'Strand': ['Meer', 'Pool', 'See'],
-    'Kino': ['Theater', 'Konzert', 'Show'],
-    'Schule': ['Uni', 'Büro', 'Bibliothek'],
-    'Auto': ['Bus', 'Zug', 'Fahrrad'],
-    'Handy': ['Tablet', 'Laptop', 'Computer'],
-    'Musik': ['Radio', 'Konzert', 'Lied'],
-    'Sport': ['Fitness', 'Gym', 'Training'],
-    'Buch': ['Zeitung', 'Magazin', 'Roman'],
-    'Kaffee': ['Tee', 'Kakao', 'Saft'],
-    'Hund': ['Welpe', 'Husky', 'Retriever'],
-    'Katze': ['Kätzchen', 'Tiger', 'Leopard'],
-    'Haus': ['Wohnung', 'Villa', 'Bungalow'],
-    'Baum': ['Pflanze', 'Strauch', 'Wald'],
-    'Winter': ['Schnee', 'Kälte', 'Weihnachten'],
-    'Sommer': ['Sonne', 'Hitze', 'Ferien'],
-    'Berg': ['Gipfel', 'Alpen', 'Wanderung'],
-    'Stadt': ['Dorf', 'Metropole', 'Vorort'],
-    'Spiel': ['Game', 'Brettspiel', 'Quiz'],
-    'Zug': ['Bahn', 'S-Bahn', 'U-Bahn'],
-    'Wasser': ['Fluss', 'See', 'Ozean'],
-    'Feuer': ['Flamme', 'Lagerfeuer', 'Glut'],
-    'Licht': ['Lampe', 'Kerze', 'Schein'],
-    'Sonne': ['Sonnenstrahl', 'Hitze', 'Tag'],
-    'Mond': ['Nacht', 'Stern', 'Dunkelheit'],
-    'Computer': ['PC', 'Laptop', 'Server'],
-    'Film': ['Serie', 'Doku', 'Kurzfilm'],
-    'Reise': ['Urlaub', 'Trip', 'Tour'],
-    'Party': ['Feier', 'Event', 'Geburtstag'],
-    'Lernen': ['Studieren', 'Üben', 'Lesen'],
-    'Arbeit': ['Job', 'Beruf', 'Karriere'],
-    'Essen': ['Mahlzeit', 'Snack', 'Gericht'],
-    'Trinken': ['Saft', 'Cola', 'Wasser'],
-    'Garten': ['Hof', 'Wiese', 'Beet'],
-    'Blume': ['Rose', 'Tulpe', 'Gänseblümchen'],
-    'Lied': ['Song', 'Melodie', 'Track'],
-    'Lachen': ['Grinsen', 'Kichern', 'Freude'],
-    'Weinen': ['Tränen', 'Trauer', 'Kummer'],
-    'Tanzen': ['Bewegen', 'Musik', 'Rhythmus'],
-    'Regen': ['Tropfen', 'Wolke', 'Nässe'],
-    'Wald': ['Bäume', 'Forst', 'Natur'],
-    'Fahrrad': ['Mountainbike', 'E-Bike', 'Rennrad'],
-    'Bahn': ['Zug', 'Tram', 'S-Bahn'],
-    'Telefon': ['Handy', 'Festnetz', 'Anruf'],
-    'Fenster': ['Glas', 'Ausblick', 'Rahmen'],
-    'Stuhl': ['Hocker', 'Sessel', 'Bank'],
-    'Tisch': ['Schreibtisch', 'Esstisch', 'Beistelltisch'],
-    'Uhr': ['Wecker', 'Armbanduhr', 'Stoppuhr'],
-    'Jacke': ['Mantel', 'Pullover', 'Hoodie'],
-    'Brille': ['Sonnenbrille', 'Lesebrille', 'Sehhilfe'],
-    'Abenteuer': ['Erlebnis', 'Expedition', 'Reise'],
-    'leuchten': ['glänzen', 'funkeln', 'scheinen'],
-    'kreativ': ['einfallsreich', 'originell', 'schöpferisch'],
-    'Wissenschaft': ['Forschung', 'Technologie', 'Theorie'],
-    'fliegen': ['gleiten', 'schweben', 'steigen'],
-    'Programmierer': ['Coder', 'Developer', 'Hacker'],
-    'nachdenklich': ['grübelnd', 'still', 'reflektiert'],
-    'Entscheidung': ['Wahl', 'Urteil', 'Lösung'],
-    'hacken': ['programmieren', 'cracken', 'modifizieren'],
-    'glücklich': ['zufrieden', 'erfüllt', 'fröhlich'],
-    'Vertrauen': ['Glaube', 'Zuverlässigkeit', 'Sicherheit'],
-    'bauen': ['konstruieren', 'errichten', 'entwickeln'],
-    'schnell': ['flink', 'rasant', 'zügig'],
-    'explodieren': ['zerbersten', 'platzen', 'ausbrechen'],
-    'Chaos': ['Unordnung', 'Durcheinander', 'Wirrwarr'],
-    'Roboter': ['Android', 'Maschine', 'Automat'],
-    'träumen': ['fantasieren', 'vorstellen', 'wünschen'],
-    'fokussiert': ['konzentriert', 'zielgerichtet', 'aufmerksam'],
-    'Philosophie': ['Denksystem', 'Weltanschauung', 'Logik'],
-    'reisen': ['touren', 'fahren', 'erkunden'],
-    'malen': ['zeichnen', 'skizzieren', 'pinseln'],
-    'scharfsinnig': ['klug', 'analytisch', 'intelligent'],
-    'Zukunft': ['Morgen', 'Perspektive', 'Vision'],
-    'lernen': ['üben', 'studieren', 'verstehen'],
-    'intelligent': ['clever', 'schlau', 'klug'],
-    'Gedanken': ['Ideen', 'Überlegungen', 'Einfälle'],
-    'analysieren': ['untersuchen', 'bewerten', 'durchdenken'],
-    'einsam': ['allein', 'verlassen', 'isoliert'],
-    'Mut': ['Tapferkeit', 'Stärke', 'Selbstvertrauen'],
-    'schweben': ['gleiten', 'fliegen', 'sinken'],
-    'Innovation': ['Neuerung', 'Erfindung', 'Fortschritt'],
-    'tiefgründig': ['nachdenklich', 'bedeutungsvoll', 'ernst'],
-    'programmieren': ['coden', 'entwickeln', 'skripten'],
-    'Natur': ['Umwelt', 'Landschaft', 'Wildnis'],
-    'rennen': ['laufen', 'sprinten', 'joggen'],
-    'erfinden': ['kreieren', 'erschaffen', 'entwickeln'],
-    'logisch': ['klar', 'rational', 'strukturiert'],
-    'Magie': ['Zauber', 'Illusion', 'Mystik'],
-    'heilen': ['kurieren', 'retten', 'pflegen'],
-    'mutig': ['tapfer', 'furchtlos', 'entschlossen'],
-    'Kreativität': ['Einfallsreichtum', 'Ideenreichtum', 'Originalität'],
-    'entwickeln': ['erschaffen', 'verbessern', 'programmieren'],
-    'abstrakt': ['theoretisch', 'ungegenständlich', 'symbolisch'],
-    'entdecken': ['finden', 'erkunden', 'aufspüren'],
-    'universell': ['allgemein', 'global', 'übergreifend'],
-    'Kommunikation': ['Austausch', 'Dialog', 'Gespräch'],
-    'fühlen': ['spüren', 'wahrnehmen', 'empfinden'],
-    'neugierig': ['interessiert', 'wissbegierig', 'fragend'],
-    'verstehen': ['begreifen', 'nachvollziehen', 'einsehen'],
-    'Zeitreise': ['Zeitsprung', 'Chronoreise', 'Vergangenheitsbesuch']
-};
-
+        const WORDS = ['Pizza', 'Strand', 'Kino', 'Schule', 'Auto', 'Handy', 'Musik', 'Sport', 'Buch', 'Kaffee'];
+        const SIMILAR_WORDS = {
+            'Pizza': ['Pasta', 'Burger', 'Döner'],
+            'Strand': ['Meer', 'Pool', 'See'],
+            'Kino': ['Theater', 'Konzert', 'Show'],
+            'Schule': ['Uni', 'Büro', 'Bibliothek'],
+            'Auto': ['Bus', 'Zug', 'Fahrrad'],
+            'Handy': ['Tablet', 'Laptop', 'Computer'],
+            'Musik': ['Radio', 'Konzert', 'Lied'],
+            'Sport': ['Fitness', 'Gym', 'Training'],
+            'Buch': ['Zeitung', 'Magazin', 'Roman'],
+            'Kaffee': ['Tee', 'Kakao', 'Saft']
+        };
 
         // Drag state
         let dragData = {
@@ -1078,11 +908,11 @@ const SIMILAR_WORDS = {
                 input.type = 'text';
                 input.value = player;
                 input.placeholder = `Spieler ${index + 1}`;
-                input.addEventListener('input', function() {
+                input.oninput = function() {
                     gameData.players[index] = this.value;
                     updateImpostorSlider();
                     saveSettings();
-                });
+                };
                 
                 row.appendChild(input);
                 
@@ -1090,20 +920,17 @@ const SIMILAR_WORDS = {
                     const removeBtn = document.createElement('button');
                     removeBtn.className = 'remove-btn';
                     removeBtn.innerHTML = '🗑️';
-                    removeBtn.addEventListener('click', function() {
+                    removeBtn.onclick = function() {
                         gameData.players.splice(index, 1);
                         renderPlayers();
                         updateImpostorSlider();
                         saveSettings();
-                    });
+                    };
                     row.appendChild(removeBtn);
                 }
                 
                 container.appendChild(row);
             });
-            
-            // Update slider max after rendering all players
-            updateImpostorSlider();
         }
 
         function addPlayer() {
