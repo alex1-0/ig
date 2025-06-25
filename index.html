@@ -1078,11 +1078,11 @@ const SIMILAR_WORDS = {
                 input.type = 'text';
                 input.value = player;
                 input.placeholder = `Spieler ${index + 1}`;
-                input.oninput = function() {
+                input.addEventListener('input', function() {
                     gameData.players[index] = this.value;
                     updateImpostorSlider();
                     saveSettings();
-                };
+                });
                 
                 row.appendChild(input);
                 
@@ -1090,17 +1090,20 @@ const SIMILAR_WORDS = {
                     const removeBtn = document.createElement('button');
                     removeBtn.className = 'remove-btn';
                     removeBtn.innerHTML = '🗑️';
-                    removeBtn.onclick = function() {
+                    removeBtn.addEventListener('click', function() {
                         gameData.players.splice(index, 1);
                         renderPlayers();
                         updateImpostorSlider();
                         saveSettings();
-                    };
+                    });
                     row.appendChild(removeBtn);
                 }
                 
                 container.appendChild(row);
             });
+            
+            // Update slider max after rendering all players
+            updateImpostorSlider();
         }
 
         function addPlayer() {
